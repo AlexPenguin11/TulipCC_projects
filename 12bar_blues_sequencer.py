@@ -1,45 +1,40 @@
 import music, random
 
-synthBass = synth.PatchSynth(num_voices=1, patch=0)
+measures = 12
+beats = 4
+note_count = 4
+
+seq = sequencer.AMYSequence(measures * beats, note_count)
+#This starts at 1, not 0
+
+synthBass = synth.PatchSynth(num_voices=1, patch=142)
 synthMelody = synth.PatchSynth(num_voices=4, patch=128)
-synthMelody.note_on(48, 0.6)
-synthMelody.note_on(52, 0.6)
-synthMelody.note_on(55, 0.6)
-synthMelody.note_on(58, 0.6)
-synthBass.note_on(36, 2)
-for i in range(3000):
-    print(i)
-synthBass.note_off(36)
-synthBass.all_notes_off()
-synthBass.note_on(40, 2)
-for i in range(3000):
-    print(i)
-synthBass.note_off(40)
-synthBass.note_on(43, 2)
-for i in range(3000):
-    print(i)
-synthBass.note_off(43)
-synthBass.note_on(45, 2)
-for i in range(3000):
-    print(i)
-synthBass.note_off(45)
-synthBass.note_on(46, 2)
-for i in range(3000):
-    print(i)
-synthBass.note_off(46)
-synthBass.note_on(45, 2)
-for i in range(3000):
-    print(i)
-synthBass.note_off(45)
-synthBass.note_on(43, 2)
-for i in range(3000):
-    print(i)
-synthBass.note_off(43)
-synthBass.note_on(40, 2)
-for i in range(3000):
-    print(i)
-synthBass.note_off(40)
-synthMelody.note_off(48)
-synthMelody.note_off(52)
-synthMelody.note_off(55)
-synthMelody.note_off(58)
+
+notes = [[[36, 40, 43, 40], [48, 52, 55, 58]],
+         [[36, 40, 43, 40], [48, 52, 55, 58]],
+         [[36, 40, 43, 40], [48, 52, 55, 58]],
+         [[36, 40, 43, 40], [48, 52, 55, 58]],
+         [[41, 45, 48, 45], [53, 57, 60, 63]],
+         [[41, 45, 48, 45], [53, 57, 60, 63]],
+         [[36, 40, 43, 40], [48, 52, 55, 58]],
+         [[36, 40, 43, 40], [48, 52, 55, 58]],
+         [[43, 47, 50, 47], [55, 59, 62, 65]],
+         [[41, 45, 48, 45], [53, 57, 60, 63]],
+         [[36, 40, 43, 40], [48, 52, 55, 58]],
+         [[36, 40, 43, 40], [48, 52, 55, 58]] ]
+
+for i in range(12):
+    for j in  range (4):
+        # since there is only one voice, no need to turn notes back off
+        #if j == 0 and i == 0:
+        #    note_off = measures*beats-1
+        #    note_idx = j+3
+        #else:
+        #    note_off = i*beats+j-1
+        #    note_idx = j-1
+        #seq.add(note_off, synthBass.note_off, [notes[i][0][note_idx]])
+        seq.add(i*beats+j + 1, synthBass.note_on, [notes[i][0][j]])
+        print("I: ",i,"J: ",j,"Add: ",notes[i][0][j] )
+    for k in range(4):
+        #seq.add(i*beats, synthMelody.note_off, [notes[i-1][k+1]])
+        seq.add(i*beats + 1, synthMelody.note_on, [notes[i][1][k],0.2])
